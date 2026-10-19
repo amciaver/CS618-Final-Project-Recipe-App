@@ -1,3 +1,4 @@
+//only works if it can read init.js env var (which it can't)
 import { initDatabase } from './db/init.js'
 import { Post } from './db/models/post.js'
 await initDatabase()
