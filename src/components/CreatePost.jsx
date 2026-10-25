@@ -6,11 +6,12 @@ import { createPost } from '../api/posts.js'
 export function CreatePost() {
   const [title, setTitle] = useState('')
   const [contents, setContents] = useState('')
+  const [ingredients, setIngredients] = useState('')
   const [token] = useAuth()
   const queryClient = useQueryClient()
 
   const createPostMutation = useMutation({
-    mutationFn: () => createPost(token, { title, contents }),
+    mutationFn: () => createPost(token, { title, contents, ingredients }),
     onSuccess: () => queryClient.invalidateQueries(['posts']),
   })
   const handleSubmit = (e) => {
@@ -36,6 +37,13 @@ export function CreatePost() {
       <textarea
         value={contents}
         onChange={(e) => setContents(e.target.value)}
+      />
+      <br />
+      <br />
+      <label htmlFor='create-ingredients'>Ingredients: </label>
+      <textarea
+        //value={ingredients}
+        onChange={(e) => setIngredients(e.target.value)}
       />
       <br />
       <br />
