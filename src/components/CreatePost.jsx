@@ -42,7 +42,7 @@ export function CreatePost() {
       <br />
       <label htmlFor='create-ingredients'>Ingredients: </label>
       <textarea
-        //value={ingredients}
+        value={ingredients}
         onChange={(e) => setIngredients(e.target.value)}
       />
       <br />

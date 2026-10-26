@@ -22,7 +22,7 @@ export function Blog() {
       <br />
       <hr />
       <br />
-      <h1>Welcome to My Blog!</h1>
+      <h1>Welcome to My Recipe App!</h1>
       <CreatePost />
       <br />
       <hr />

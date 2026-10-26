@@ -29,10 +29,14 @@ export async function listPostsByTag(tags, options) {
 export async function getPostById(postId) {
   return await Post.findById(postId)
 }
-export async function updatePost(userId, postId, { title, contents, tags }) {
+export async function updatePost(
+  userId,
+  postId,
+  { title, contents, tags, ingredients },
+) {
   return await Post.findOneAndUpdate(
     { _id: postId, author: userId },
-    { $set: { title, contents, tags } },
+    { $set: { title, contents, tags, ingredients } },
     { new: true },
   )
 }
