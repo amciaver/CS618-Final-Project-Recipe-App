@@ -49,11 +49,12 @@ export function CreatePost() {
         <input
           type='image'
           id='image'
-          alt='Login'
+          alt='Please enter image URL'
           src={imageUrl}
           style={{ width: 200, height: 150 }}
         />
       </div>
+      <div>Description: </div>
       <textarea
         value={contents}
         onChange={(e) => setContents(e.target.value)}
