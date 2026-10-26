@@ -6,7 +6,7 @@ const postSchema = new Schema(
     contents: String,
     tags: [String],
     ingredients: String,
-    imageURL: String,
+    imageUrl: String,
   },
   { timestamps: true },
 )

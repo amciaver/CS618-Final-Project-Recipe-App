@@ -7,11 +7,14 @@ export function CreatePost() {
   const [title, setTitle] = useState('')
   const [contents, setContents] = useState('')
   const [ingredients, setIngredients] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
+
   const [token] = useAuth()
   const queryClient = useQueryClient()
 
   const createPostMutation = useMutation({
-    mutationFn: () => createPost(token, { title, contents, ingredients }),
+    mutationFn: () =>
+      createPost(token, { title, contents, ingredients, imageUrl }),
     onSuccess: () => queryClient.invalidateQueries(['posts']),
   })
   const handleSubmit = (e) => {
@@ -34,6 +37,8 @@ export function CreatePost() {
         />
       </div>
       <br />
+      <image value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
+      <input type='image' id='image' alt='Login' src={imageUrl} />
       <textarea
         value={contents}
         onChange={(e) => setContents(e.target.value)}

@@ -3,9 +3,16 @@ import { User } from '../db/models/user.js'
 
 export async function createPost(
   userId,
-  { title, contents, tags, ingredients },
+  { title, contents, tags, ingredients, imageUrl },
 ) {
-  const post = new Post({ title, author: userId, contents, tags, ingredients })
+  const post = new Post({
+    title,
+    author: userId,
+    contents,
+    tags,
+    ingredients,
+    imageUrl,
+  })
   return await post.save()
 }
 
@@ -32,11 +39,11 @@ export async function getPostById(postId) {
 export async function updatePost(
   userId,
   postId,
-  { title, contents, tags, ingredients },
+  { title, contents, tags, ingredients, imageUrl },
 ) {
   return await Post.findOneAndUpdate(
     { _id: postId, author: userId },
-    { $set: { title, contents, tags, ingredients } },
+    { $set: { title, contents, tags, ingredients, imageUrl } },
     { new: true },
   )
 }
