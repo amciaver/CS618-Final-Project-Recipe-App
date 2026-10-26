@@ -5,10 +5,10 @@ export function Post({ title, contents, author, ingredients, imageUrl }) {
   return (
     <article>
       <h3>{title}</h3>
-      <h3>{imageUrl}</h3>
-      <input type='image' id='image' alt='Login' src={imageUrl} />
+
+      <img src={imageUrl} alt='imageUrl' style={{ width: 200, height: 150 }} />
       <div>{contents}</div>
-      <div>{ingredients}</div>
+      <div>Ingredients: {ingredients}</div>
       {author && (
         <em>
           <br />

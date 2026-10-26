@@ -37,15 +37,32 @@ export function CreatePost() {
         />
       </div>
       <br />
-      <image value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
-      <input type='image' id='image' alt='Login' src={imageUrl} />
+      <label htmlFor='create-imageUrl'>Image URL: </label>
+      <input
+        type='text'
+        name='create-imageUrl'
+        id='create-imageUrl'
+        value={imageUrl}
+        onChange={(e) => setImageUrl(e.target.value)}
+      />
+      <div>
+        <input
+          type='image'
+          id='image'
+          alt='Login'
+          src={imageUrl}
+          style={{ width: 200, height: 150 }}
+        />
+      </div>
       <textarea
         value={contents}
         onChange={(e) => setContents(e.target.value)}
       />
       <br />
       <br />
-      <label htmlFor='create-ingredients'>Ingredients: </label>
+      <div>
+        <label htmlFor='create-ingredients'>Ingredients: </label>
+      </div>
       <textarea
         value={ingredients}
         onChange={(e) => setIngredients(e.target.value)}
