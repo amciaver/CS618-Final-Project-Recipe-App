@@ -21,6 +21,10 @@ export function Blog() {
     <div style={{ padding: 8 }}>
       <Helmet>
         <title>Full-Stack Recipe App</title>
+        <meta
+          name='description'
+          content='A site full of great recipes to share.'
+        />
       </Helmet>
       <Header />
       <br />
