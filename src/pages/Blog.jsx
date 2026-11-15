@@ -2,8 +2,8 @@ import { PostList } from '../components/PostList.jsx'
 import { CreatePost } from '../components/CreatePost.jsx'
 import { PostFilter } from '../components/PostFilter.jsx'
 import { PostSorting } from '../components/PostSorting.jsx'
-import { useQuery } from '@tanstack/react-query'
-import { getPosts } from '../api/posts.js'
+import { useQuery as useGraphQLQuery } from '@apollo/client/react/index.js'
+import { GET_POSTS } from '../api/graphql/posts.js'
 import { useState } from 'react'
 import { Header } from '../components/Header.jsx'
 import { Helmet } from 'react-helmet-async'
@@ -12,11 +12,10 @@ export function Blog() {
   const [author, setAuthor] = useState('')
   const [sortBy, setSortBy] = useState('createdAt')
   const [sortOrder, setSortOrder] = useState('descending')
-  const postsQuery = useQuery({
-    queryKey: ['posts', { author, sortBy, sortOrder }],
-    queryFn: () => getPosts({ author, sortBy, sortOrder }),
-  })
-  const posts = postsQuery.data ?? []
+
+  const postsQuery = useGraphQLQuery(GET_POSTS)
+  const posts = postsQuery.data?.posts ?? []
+
   return (
     <div style={{ padding: 8 }}>
       <Helmet>

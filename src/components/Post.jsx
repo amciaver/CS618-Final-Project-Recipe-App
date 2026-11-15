@@ -9,7 +9,7 @@ export function Post({
   author,
   ingredients,
   imageUrl,
-  _id,
+  id,
   fullPost = false,
 }) {
   return (
@@ -17,7 +17,7 @@ export function Post({
       {fullPost ? (
         <h3>{title}</h3>
       ) : (
-        <Link to={`/posts/${_id}/${slug(title)}`}>
+        <Link to={`/posts/${id}/${slug(title)}`}>
           <h3>{title}</h3>
         </Link>
       )}
@@ -40,6 +40,6 @@ Post.propTypes = {
   author: PropTypes.string,
   ingredients: PropTypes.string,
   imageUrl: PropTypes.string,
-  _id: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
   fullPost: PropTypes.bool,
 }
