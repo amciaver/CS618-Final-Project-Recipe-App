@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import { User } from './User.jsx'
 import { Link } from 'react-router-dom'
 import slug from 'slug'
+import { useState } from 'react'
 
 export function Post({
   title,
@@ -12,6 +13,14 @@ export function Post({
   id,
   fullPost = false,
 }) {
+  const [liked, setLiked] = useState(false)
+  const handleLike = async () => {
+    if (liked === false) {
+      setLiked(true)
+    } else {
+      setLiked(false)
+    }
+  }
   return (
     <article>
       {fullPost ? (
@@ -32,6 +41,14 @@ export function Post({
           Written by <User {...author} />
         </em>
       )}
+      <div>
+        <input
+          className='styled'
+          type='button'
+          value={liked ? 'Liked' : 'Like'}
+          onClick={handleLike}
+        />
+      </div>
     </article>
   )
 }

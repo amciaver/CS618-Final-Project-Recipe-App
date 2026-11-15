@@ -17,23 +17,20 @@ export function CreatePost() {
 
   const [token] = useAuth()
 
-  const [createPost, { loading, data, error }] = useGraphQLMutation(
-    CREATE_POST,
-    {
-      variables: {
-        title,
-        contents,
-        ingredients,
-        imageUrl,
-      },
-      context: {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-      refetchQueries: [GET_POSTS, GET_POSTS_BY_AUTHOR],
+  const [createPost, { loading, data }] = useGraphQLMutation(CREATE_POST, {
+    variables: {
+      title,
+      contents,
+      ingredients,
+      imageUrl,
     },
-  )
+    context: {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+    refetchQueries: [GET_POSTS, GET_POSTS_BY_AUTHOR],
+  })
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -54,9 +51,7 @@ export function CreatePost() {
           onChange={(e) => setTitle(e.target.value)}
         />
       </div>
-
       <br />
-
       <div>
         <label htmlFor='create-imageUrl'>Image URL: </label>
         <input
@@ -76,9 +71,7 @@ export function CreatePost() {
           />
         </div>
       )}
-
       <br />
-
       <div>
         <label htmlFor='create-contents'>Description: </label>
         <textarea
@@ -87,9 +80,7 @@ export function CreatePost() {
           onChange={(e) => setContents(e.target.value)}
         />
       </div>
-
       <br />
-
       <div>
         <label htmlFor='create-ingredients'>Ingredients: </label>
         <textarea
@@ -98,17 +89,12 @@ export function CreatePost() {
           onChange={(e) => setIngredients(e.target.value)}
         />
       </div>
-
       <br />
-
       <input
         type='submit'
         value={loading ? 'Creating....' : 'Create'}
         disabled={!title || loading}
       />
-
-      {error && <div>Error creating post: {error.message}</div>}
-
       {data?.createPost ? (
         <>
           <br />
