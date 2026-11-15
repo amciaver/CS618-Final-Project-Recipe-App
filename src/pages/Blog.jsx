@@ -2,33 +2,31 @@ import { PostList } from '../components/PostList.jsx'
 import { CreatePost } from '../components/CreatePost.jsx'
 import { PostFilter } from '../components/PostFilter.jsx'
 import { PostSorting } from '../components/PostSorting.jsx'
-import { useQuery as useGraphQLQuery } from '@apollo/client/react/index.js'
-import { GET_POSTS } from '../api/graphql/posts.js'
-import { useState } from 'react'
 import { Header } from '../components/Header.jsx'
+import { useQuery as useGraphQLQuery } from '@apollo/client/react/index.js'
+import { GET_POSTS, GET_POSTS_BY_AUTHOR } from '../api/graphql/posts.js'
 import { Helmet } from 'react-helmet-async'
+import { useState } from 'react'
 
 export function Blog() {
   const [author, setAuthor] = useState('')
   const [sortBy, setSortBy] = useState('createdAt')
   const [sortOrder, setSortOrder] = useState('descending')
 
-  const postsQuery = useGraphQLQuery(GET_POSTS)
-  const posts = postsQuery.data?.posts ?? []
+  const postsQuery = useGraphQLQuery(author ? GET_POSTS_BY_AUTHOR : GET_POSTS, {
+    variables: { author, options: { sortBy, sortOrder } },
+  })
+  const posts = postsQuery.data?.postsByAuthor ?? postsQuery.data?.posts ?? []
 
   return (
     <div style={{ padding: 8 }}>
       <Helmet>
-        <title>Full-Stack Recipe App</title>
-        <meta
-          name='description'
-          content='A site full of great recipes to share.'
-        />
+        <title>Recipe App</title>
+        <meta name='description' content='A blog full of recipes.' />
       </Helmet>
       <Header />
       <br />
       <hr />
-      <br />
       <CreatePost />
       <br />
       <hr />
