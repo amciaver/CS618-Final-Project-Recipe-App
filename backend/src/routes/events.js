@@ -3,6 +3,7 @@ import {
   getDailyViews,
   getDailyDurations,
   trackEvent,
+  getTotalLikes,
 } from '../services/events.js'
 import { getPostById } from '../services/posts.js'
 
@@ -49,6 +50,18 @@ export function eventRoutes(app) {
       const post = await getPostById(postId)
       if (post === null) return res.status(400).end()
       const stats = await getDailyDurations(post._id)
+      return res.json(stats)
+    } catch (err) {
+      console.error('error getting stats', err)
+      return res.status(500).end()
+    }
+  })
+  app.get('/api/v1/events/totalLikes/:postId', async (req, res) => {
+    try {
+      const { postId } = req.params
+      const post = await getPostById(postId)
+      if (post === null) return res.status(400).end()
+      const stats = await getTotalLikes(post._id)
       return res.json(stats)
     } catch (err) {
       console.error('error getting stats', err)

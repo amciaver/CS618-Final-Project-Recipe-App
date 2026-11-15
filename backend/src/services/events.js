@@ -18,16 +18,11 @@ export async function getTotalViews(postId) {
 export async function getDailyViews(postId) {
   return await Event.aggregate([
     {
-      $match: {
-        post: postId,
-        action: 'startView',
-      },
+      $match: { post: postId, action: 'startView' },
     },
     {
       $group: {
-        _id: {
-          $dateTrunc: { date: '$date', unit: 'day' },
-        },
+        _id: { $dateTrunc: { date: '$date', unit: 'day' } },
         views: { $count: {} },
       },
     },
@@ -77,4 +72,29 @@ export async function getDailyDurations(postId) {
       $sort: { _id: 1 },
     },
   ])
+}
+export async function getTotalLikes(postId) {
+  const result = await Event.aggregate([
+    { $match: { post: postId } },
+    {
+      $sort: { date: 1 },
+    },
+    {
+      $group: {
+        _id: '$session',
+        lastAction: { $last: '$action' },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        likes: {
+          $sum: {
+            $cond: [{ $eq: ['$lastAction', 'LIKE'] }, 1, 0],
+          },
+        },
+      },
+    },
+  ])
+  return { likes: result[0]?.likes ?? 0 }
 }

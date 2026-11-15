@@ -3,6 +3,8 @@ import { User } from './User.jsx'
 import { Link } from 'react-router-dom'
 import slug from 'slug'
 import { useState } from 'react'
+import { useQuery, useMutation } from '@tanstack/react-query'
+import { postTrackEvent } from '../api/events.js'
 
 export function Post({
   title,
@@ -14,13 +16,35 @@ export function Post({
   fullPost = false,
 }) {
   const [liked, setLiked] = useState(false)
+  const [session, setSession] = useState()
+
+  const { data: likeData, refetch: refetchLikes } = useQuery({
+    queryKey: ['totalLikes', id],
+    queryFn: () =>
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/events/totalLikes/${id}`).then(
+        (res) => res.json(),
+      ),
+  })
+
+  const likeCount = likeData?.likes ?? 0
+
+  const trackEventMutation = useMutation({
+    mutationFn: (action) => postTrackEvent({ postId: id, action, session }),
+    onSuccess: (data) => {
+      if (data?.session) setSession(data.session)
+      refetchLikes()
+    },
+  })
+
   const handleLike = async () => {
-    if (liked === false) {
-      setLiked(true)
-    } else {
-      setLiked(false)
-    }
+    const action = liked ? 'UNLIKE' : 'LIKE'
+    trackEventMutation.mutate(action, {
+      onSuccess: () => {
+        setLiked(!liked)
+      },
+    })
   }
+
   return (
     <article>
       {fullPost ? (
@@ -45,13 +69,15 @@ export function Post({
         <input
           className='styled'
           type='button'
-          value={liked ? 'Liked' : 'Like'}
+          disabled={trackEventMutation.isPending}
+          value={`${liked ? 'Liked' : 'Like'} (${likeCount})`}
           onClick={handleLike}
         />
       </div>
     </article>
   )
 }
+
 Post.propTypes = {
   title: PropTypes.string.isRequired,
   contents: PropTypes.string,
