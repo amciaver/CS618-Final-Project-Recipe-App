@@ -4,20 +4,33 @@ import { createPost } from '../services/posts.js'
 
 export const mutationSchema = `#graphql
 type Mutation {
-signupUser(username: String!, password: String!): User
-loginUser(username: String!, password: String!): String
-createPost(title: String!, contents: String, tags:[String]): Post
+  signupUser(username: String!, password: String!): User
+  loginUser(username: String!, password: String!): String
+  createPost(
+    title: String!
+    contents: String
+    tags: [String]
+    ingredients: String
+    imageUrl: String
+  ): Post
 }
 `
+
 export const mutationResolver = {
   Mutation: {
     signupUser: async (parent, { username, password }) => {
       return await createUser({ username, password })
     },
+
     loginUser: async (parent, { username, password }) => {
       return await loginUser({ username, password })
     },
-    createPost: async (parent, { title, contents, tags }, { auth }) => {
+
+    createPost: async (
+      parent,
+      { title, contents, tags, ingredients, imageUrl },
+      { auth },
+    ) => {
       if (!auth) {
         throw new GraphQLError(
           'You need to be authenticated to perform this action.',
@@ -28,7 +41,14 @@ export const mutationResolver = {
           },
         )
       }
-      return await createPost(auth.sub, { title, contents, tags })
+
+      return await createPost(auth.sub, {
+        title,
+        contents,
+        tags,
+        ingredients,
+        imageUrl,
+      })
     },
   },
 }

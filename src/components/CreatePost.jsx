@@ -1,7 +1,13 @@
 import { useState } from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation as useGraphQLMutation } from '@apollo/client/react/index.js'
+import {
+  CREATE_POST,
+  GET_POSTS,
+  GET_POSTS_BY_AUTHOR,
+} from '../api/graphql/posts.js'
 import { useAuth } from '../contexts/AuthContext.jsx'
-import { createPost } from '../api/posts.js'
+import { Link } from 'react-router-dom'
+import slug from 'slug'
 
 export function CreatePost() {
   const [title, setTitle] = useState('')
@@ -10,16 +16,28 @@ export function CreatePost() {
   const [imageUrl, setImageUrl] = useState('')
 
   const [token] = useAuth()
-  const queryClient = useQueryClient()
 
-  const createPostMutation = useMutation({
-    mutationFn: () =>
-      createPost(token, { title, contents, ingredients, imageUrl }),
-    onSuccess: () => queryClient.invalidateQueries(['posts']),
-  })
+  const [createPost, { loading, data, error }] = useGraphQLMutation(
+    CREATE_POST,
+    {
+      variables: {
+        title,
+        contents,
+        ingredients,
+        imageUrl,
+      },
+      context: {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+      refetchQueries: [GET_POSTS, GET_POSTS_BY_AUTHOR],
+    },
+  )
+
   const handleSubmit = (e) => {
     e.preventDefault()
-    createPostMutation.mutate()
+    createPost()
   }
 
   if (!token) return <div>Please log in to create new posts.</div>
@@ -36,49 +54,71 @@ export function CreatePost() {
           onChange={(e) => setTitle(e.target.value)}
         />
       </div>
+
       <br />
-      <label htmlFor='create-imageUrl'>Image URL: </label>
-      <input
-        type='text'
-        name='create-imageUrl'
-        id='create-imageUrl'
-        value={imageUrl}
-        onChange={(e) => setImageUrl(e.target.value)}
-      />
+
       <div>
+        <label htmlFor='create-imageUrl'>Image URL: </label>
         <input
-          type='image'
-          id='image'
-          alt='Please enter image URL'
-          src={imageUrl}
-          style={{ width: 200, height: 150 }}
+          type='text'
+          id='create-imageUrl'
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
         />
       </div>
-      <div>Description: </div>
-      <textarea
-        value={contents}
-        onChange={(e) => setContents(e.target.value)}
-      />
+
+      {imageUrl && (
+        <div>
+          <img
+            src={imageUrl}
+            alt='Post preview'
+            style={{ width: 200, height: 150, objectFit: 'cover' }}
+          />
+        </div>
+      )}
+
       <br />
+
+      <div>
+        <label htmlFor='create-contents'>Description: </label>
+        <textarea
+          id='create-contents'
+          value={contents}
+          onChange={(e) => setContents(e.target.value)}
+        />
+      </div>
+
       <br />
+
       <div>
         <label htmlFor='create-ingredients'>Ingredients: </label>
+        <textarea
+          id='create-ingredients'
+          value={ingredients}
+          onChange={(e) => setIngredients(e.target.value)}
+        />
       </div>
-      <textarea
-        value={ingredients}
-        onChange={(e) => setIngredients(e.target.value)}
-      />
+
       <br />
-      <br />
+
       <input
         type='submit'
-        value={createPostMutation.isPending ? 'Creating....' : 'Create'}
-        disabled={!title}
+        value={loading ? 'Creating....' : 'Create'}
+        disabled={!title || loading}
       />
-      {createPostMutation.isSuccess ? (
+
+      {error && <div>Error creating post: {error.message}</div>}
+
+      {data?.createPost ? (
         <>
           <br />
-          Post created successfully!
+          Post{' '}
+          <Link
+            to={`/posts/${data.createPost.id}/${slug(data.createPost.title)}`}
+          >
+            {data.createPost.title}
+          </Link>{' '}
+          created successfully!
         </>
       ) : null}
     </form>

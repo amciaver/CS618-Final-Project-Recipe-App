@@ -5,7 +5,7 @@ id: ID!
 title: String!
 author: User
 contents: String
-tags: [String!]
+tags: [String]
 ingredients: String
 imageUrl: String
 createdAt: Float

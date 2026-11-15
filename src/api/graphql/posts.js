@@ -32,3 +32,23 @@ export const GET_POSTS_BY_AUTHOR = gql`
     }
   }
 `
+export const CREATE_POST = gql`
+  mutation createPost(
+    $title: String!
+    $contents: String
+    $tags: [String!]
+    $ingredients: String
+    $imageUrl: String
+  ) {
+    createPost(
+      title: $title
+      contents: $contents
+      tags: $tags
+      ingredients: $ingredients
+      imageUrl: $imageUrl
+    ) {
+      id
+      title
+    }
+  }
+`
