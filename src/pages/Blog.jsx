@@ -29,7 +29,6 @@ export function Blog() {
       <br />
       <hr />
       <br />
-      <h1>Welcome to My Recipe App!</h1>
       <CreatePost />
       <br />
       <hr />

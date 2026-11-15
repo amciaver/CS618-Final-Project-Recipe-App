@@ -21,14 +21,15 @@ export function Post({
           <h3>{title}</h3>
         </Link>
       )}
-      <img src={imageUrl} alt='imageUrl' style={{ width: 200, height: 150 }} />
+      {imageUrl && (
+        <img src={imageUrl} alt={title} style={{ width: 200, height: 150 }} />
+      )}
       <div>{contents}</div>
-      {fullPost}
-      <div>Ingredients: {ingredients}</div>
+      {ingredients && <div>Ingredients: {ingredients}</div>}
       {author && (
         <em>
           {fullPost && <br />}
-          Written by <User id={author} />
+          Written by <User {...author} />
         </em>
       )}
     </article>
@@ -37,7 +38,7 @@ export function Post({
 Post.propTypes = {
   title: PropTypes.string.isRequired,
   contents: PropTypes.string,
-  author: PropTypes.string,
+  author: PropTypes.shape(User.propTypes),
   ingredients: PropTypes.string,
   imageUrl: PropTypes.string,
   id: PropTypes.string.isRequired,
