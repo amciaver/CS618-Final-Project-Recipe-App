@@ -8,7 +8,6 @@ export const POST_FIELDS = gql`
     tags
     ingredients
     imageUrl
-    likeCount
     updatedAt
     createdAt
     author {

@@ -10,7 +10,6 @@ ingredients: String
 imageUrl: String
 createdAt: Float
 updatedAt: Float
-likeCount: Int
 }
 `
 export const postResolver = {

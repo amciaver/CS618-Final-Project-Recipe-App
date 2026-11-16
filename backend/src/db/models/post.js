@@ -7,7 +7,6 @@ const postSchema = new Schema(
     tags: [String],
     ingredients: String,
     imageUrl: String,
-    likeCount: { type: Number, default: 0 },
   },
   { timestamps: true },
 )
