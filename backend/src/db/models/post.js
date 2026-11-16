@@ -7,7 +7,7 @@ const postSchema = new Schema(
     tags: [String],
     ingredients: String,
     imageUrl: String,
-    likeCount: { type: Schema.Types.ObjectId, ref: 'user' },
+    likeCount: { type: Number, default: 0 },
   },
   { timestamps: true },
 )

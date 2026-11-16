@@ -1,5 +1,6 @@
 import { Post } from '../db/models/post.js'
 import { User } from '../db/models/user.js'
+import { getTotalLikes } from './events.js'
 
 export async function createPost(
   userId,
@@ -20,8 +21,23 @@ async function listPosts(
   query = {},
   { sortBy = 'createdAt', sortOrder = 'descending' } = {},
 ) {
-  return await Post.find(query).sort({ [sortBy]: sortOrder })
+  const direction = sortOrder === 'ascending' ? 1 : -1
+
+  if (sortBy === 'likes') {
+    const posts = await Post.find(query)
+    const postsWithLikes = await Promise.all(
+      posts.map(async (post) => {
+        const { likes } = await getTotalLikes(post._id)
+
+        return { post, likes }
+      }),
+    )
+    postsWithLikes.sort((a, b) => direction * (a.likes - b.likes))
+    return postsWithLikes.map(({ post }) => post)
+  }
+  return await Post.find(query).sort({ [sortBy]: direction })
 }
+
 export async function listAllPosts(options) {
   return await listPosts({}, options)
 }
